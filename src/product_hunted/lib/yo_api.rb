@@ -26,13 +26,21 @@ class YoApi
 		# load Nokogiri
 		doc = Nokogiri::HTML(open("http://www.producthunt.com"))
 
-		# get all ratings
-		ratings = doc.css('.today .vote-count').map {|r| r.text}
+		# get all posts
+		posts = doc.css('.today .post')
 
-		# return if any rating is creater than NUM_VOTES
-		ratings.any? do |r|
-			r.to_i >= NUM_VOTES
+		posts.each do |p|
+			if p.at_css('.vote-count').text.to_i > NUM_VOTES
+				link = p.at_css('.post-url')['href']
+				if Product.find_by(link: link).nil?
+					Product.create!(link: link)
+
+					return true # so don't add other products
+				end
+			end
 		end
+
+		return false
 	end
 
 	# ping the api
