@@ -27,6 +27,9 @@ gem 'spring',        group: :development
 # for Heroku
 gem 'rails_12factor', group: :production
 
+# for New Relic
+gem 'newrelic_rpm'
+
 # for Nokogiri
 gem 'nokogiri'
 
