@@ -16,16 +16,17 @@ class YoApi
 
 	# check if should ping, and if should ping, do it
 	def self.run
-		if self.should_ping_api?
+		doc = Nokogiri::HTML(open("http://www.producthunt.com"))
+
+		if self.should_ping_api?(doc)
 			self.ping_api
 		end
 	end
 
 	# parse product hunt to see if should ping
-	def self.should_ping_api?
-		# load Nokogiri
-		doc = Nokogiri::HTML(open("http://www.producthunt.com"))
-
+	#
+	# doc - the Nokogiri document
+	def self.should_ping_api?(doc)
 		# get all posts
 		posts = doc.css('.today .post')
 
