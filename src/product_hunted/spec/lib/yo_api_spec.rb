@@ -17,6 +17,8 @@ describe YoApi, "#should_ping_api?" do
 		Product.where(link: "/l/e2ea2a928a").first_or_create # add one product
 
 		expect(YoApi.should_ping_api?(@doc)).to be(true)
+
+		Product.delete_all
 	end
 
 	it "be false if parsing page with prod > 100 votes but already in database" do
@@ -25,5 +27,7 @@ describe YoApi, "#should_ping_api?" do
 		Product.where(link: "/l/8648b01735").first_or_create
 
 		expect(YoApi.should_ping_api?(@doc)).to be(false)
+
+		Product.delete_all
 	end
 end
