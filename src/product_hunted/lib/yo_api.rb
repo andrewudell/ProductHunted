@@ -10,17 +10,17 @@ require 'net/http'
 #     YoApi.run
 class YoApi
 
-	NUM_VOTES = 100 # if votes > NUM_VOTES, will ping
+	NUM_VOTES = 150 # if votes > NUM_VOTES, will ping
 	API_TOKEN = ENV["YO_API_TOKEN"]
 	API_ENDPOINT = "http://api.justyo.co/yoall/"
+	PRODUCT_HUNT_URL = 'http://www.producthunt.com'
 
 	# check if should ping, and if should ping, do it
 	def self.run
 		doc = Nokogiri::HTML(open("http://www.producthunt.com"))
+		link = self.should_ping_api?(doc)
 
-		if self.should_ping_api?(doc)
-			self.ping_api
-		end
+		self.ping_api(link) unless link.empty?
 	end
 
 	# parse product hunt to see if should ping
@@ -36,18 +36,19 @@ class YoApi
 				if Product.find_by(link: link).nil?
 					Product.create!(link: link)
 
-					return true # so don't add other products
+					return link
 				end
 			end
 		end
 
-		return false
+		return ''
 	end
 
 	# ping the api
-	def self.ping_api
+	def self.ping_api(link)
 		uri = URI(API_ENDPOINT)
-		Net::HTTP.post_form(uri, 'api_token' => API_TOKEN)
+		link = "#{PRODUCT_HUNT_URL}#{link}"
+		Net::HTTP.post_form(uri, 'api_token' => API_TOKEN, 'link' => link)
 	end
 
 end
