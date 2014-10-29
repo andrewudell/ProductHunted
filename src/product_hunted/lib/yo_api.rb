@@ -10,7 +10,7 @@ require 'net/http'
 #     YoApi.run
 class YoApi
 
-	NUM_VOTES = 150 # if votes > NUM_VOTES, will ping
+	NUM_VOTES = 500 # if votes > NUM_VOTES, will ping
 	API_TOKEN = ENV["YO_API_TOKEN"]
 	API_ENDPOINT = "http://api.justyo.co/yoall/"
 	PRODUCT_HUNT_URL = 'http://www.producthunt.com'
